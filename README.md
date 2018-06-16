@@ -14,4 +14,7 @@ To see this in action:
 4. Two collections are used - Todos and Users    
 5. Go to /playground folder and then run node mongodb-connect.js
 6. Go to /playground folder and then run node mongodb-find.js
-7. Go to /playground folder and then run node mongodb-delete.js You can uncomment the methods to test them out.
+7. Go to /playground folder and then run node mongodb-delete.js
+8. Go to /playground folder and then run node mongodb-update.js
+
+For each file you can uncomment the methods to test them out.
