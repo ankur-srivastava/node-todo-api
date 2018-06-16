@@ -1,4 +1,4 @@
-# node-todo-api
+# Description
 A simple application to manage ToDo s. Developed using Node.js and MongoDB
 
 In this Application we use mongodb native module to connect to mongo database.
@@ -14,3 +14,4 @@ To see this in action:
 4. Two collections are used - Todos and Users    
 5. Go to /playground folder and then run node mongodb-connect.js
 6. Go to /playground folder and then run node mongodb-find.js
+7. Go to /playground folder and then run node mongodb-delete.js You can uncomment the methods to test them out.
