@@ -20,4 +20,6 @@ About the files:
 /server/models : Contains the models.
 /server/db : Connects to MongoDB using mongoose library. Creates a new model Todo and saves data.
 
+package-json has scripts to run the unit tests.
+
 For each file you can uncomment the methods to test them out.
