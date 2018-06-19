@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
-const port = 3000;
 
 /*
   Body Parser is used to parse body to send JSON data
@@ -14,6 +13,8 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
+var port = process.env.PORT || 3000;
+
 /*The middleware below let's us send body as a JSON object*/
 app.use(bodyParser.json());
 

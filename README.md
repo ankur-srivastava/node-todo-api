@@ -23,3 +23,13 @@ About the files:
 package-json has scripts to run the unit tests.
 
 For each file you can uncomment the methods to test them out.
+
+Changes made to server.js, package.json for Heroku.
+In package.json we added: "start":"node server/server.js"
+
+Other steps for Heroku setup:
+1. run heroku create
+2. We need to add mongodb by using mongolab available on Heroku.
+    Run heroku addons:create mongolab:sandbox
+3. Run heroku config
+4. In mongoose.js file add : mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoApp');
