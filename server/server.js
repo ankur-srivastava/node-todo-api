@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 const port = 3000;
 
 /*
@@ -35,6 +36,27 @@ app.get('/todos', (req,res)=>{
   }, (err)=>{
     res.status(400).send(err);
   });
+});
+
+//GET todos/123
+app.get('/todos/:id', (req,res)=>{
+  //Get the id from URL
+  //Use 5b27029f665812035ad30c21 in URL
+  var id = req.params.id;
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send('Invalid Todo ID');
+  }
+  Todo.findById({
+    _id:id
+  }).then((todo)=>{
+    if(!todo){
+      return res.send('No Todo');
+    }
+    return res.send(todo);
+  }).catch((e)=>{
+    res.status(400).send(e);
+  });
+
 });
 
 app.listen(port, ()=>{
