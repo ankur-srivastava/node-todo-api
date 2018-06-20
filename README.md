@@ -33,3 +33,4 @@ Other steps for Heroku setup:
     Run heroku addons:create mongolab:sandbox
 3. Run heroku config
 4. In mongoose.js file add : mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoApp');
+5. git push heroku master
