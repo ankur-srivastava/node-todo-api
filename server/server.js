@@ -1,3 +1,6 @@
+/*Environment variables setup in config file*/
+require('./config/config');
+
 const lodash = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,7 +17,7 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 
 /*The middleware below let's us send body as a JSON object*/
 app.use(bodyParser.json());
