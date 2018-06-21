@@ -112,6 +112,19 @@ app.patch('/todos/:id', (req,res)=>{
 
 });
 
+/*
+  Users
+*/
+app.post('/users',(req,res)=>{
+  var body = lodash.pick(req.body, ['email', 'password']);
+  var newUser = new User(body);
+  newUser.save().then((user)=>{
+    res.send(user);
+  }, (e)=>{
+    res.status(400).send(e);
+  });
+});
+
 app.listen(port, ()=>{
   console.log('Server is up at', port);
 });
