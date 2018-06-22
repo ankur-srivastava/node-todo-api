@@ -119,7 +119,15 @@ app.post('/users',(req,res)=>{
   var body = lodash.pick(req.body, ['email', 'password']);
   var newUser = new User(body);
   newUser.save().then((user)=>{
-    res.send(user);
+    /*
+      When we need to perform DB operation we should send an auth token for the user to ensure it's a valid request.
+      This token can be generated for the user when the user gets created or logs in
+    */
+    user.save().then(()=>{
+      return user.generateAuthToken();
+    }).then((token)=>{
+      res.header('x-auth',token).send(user);
+    });
   }, (e)=>{
     res.status(400).send(e);
   });
