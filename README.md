@@ -24,12 +24,17 @@ package-json has scripts to run the unit tests.
 
 For each file you can uncomment the methods to test them out.
 
---ENV Variable--
+---ENV Variable---
 
 We can set NODE_ENV variable so that test database can be used by test files. Changes made-
 1. In package.json : "test": "export NODE_ENV=test ...
 2. We dont modify start script. We set it to development locally. Heroku sets it to production.
-3. In server.js changes are made. And a config file is used to setup env variables. 
+3. In server.js changes are made. And a config file is used to setup env variables.
+
+---Auth Token---
+For JWT Token functionality refer to user.js and server.js
+
+---Heroku---
 
 Changes made to server.js, package.json for Heroku.
 In package.json we added: "start":"node server/server.js"
