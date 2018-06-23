@@ -42,6 +42,26 @@ UserSchema.methods.toJSON = function(){
   return lodash.pick(userObject, ['_id','email']);
 };
 
+/*Using statics to define method at model level or in terms of java at class level*/
+UserSchema.statics.findByToken = function(token){
+  //Use the Model here i.e. User
+  var User = this;
+  var decoded;
+  try{
+    decoded = jwt.verify(token, 'somesecret');
+  }catch(e){
+    // return new Promise((resolve, reject)=>{
+    //   reject();
+    // });
+    return Promise.reject();
+  }
+  return User.findOne({
+    _id:decoded._id,
+    'tokens.access':'auth',
+    'tokens.token':token
+  });
+};
+
 /*
   Create a new instance method for individual user object
   We use function() syntax because we need this keyword
