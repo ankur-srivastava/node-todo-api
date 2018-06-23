@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const lodash = require('lodash');
+const bcryptjs = require('bcryptjs');
 
 /*Using Mongoose Schema let's us use custom methods*/
 var UserSchema = new mongoose.Schema({
@@ -32,6 +33,31 @@ var UserSchema = new mongoose.Schema({
       }
     }
   ]
+});
+
+/*
+  Mongoose Middleware is used to hash password using bcryptjs
+  http://mongoosejs.com/docs/middleware.html
+  Ex: var schema = new Schema(..);
+        schema.pre('save', function(next) {
+        next();
+      });
+*/
+UserSchema.pre('save', function(next){
+  var user = this;
+  if(user.isModified('password')){
+    bcryptjs.genSalt(10, (err, salt)=>{
+      bcryptjs.hash(user.password,salt,(err, hash)=>{
+        if(!err){
+          console.log('Store this hash as password', hash);
+          user.password = hash;
+        }
+        next();
+      });
+    });
+  }else{
+    next();
+  }
 });
 
 /*We don't want to let others see our password & token in the response*/
