@@ -26,7 +26,7 @@ const users = [
   {
     _id:userOneId,
     email:'ankurs@gmail.com',
-    password:'abc123',
+    password:'test123',
     tokens:[
       {
         access:'auth',
