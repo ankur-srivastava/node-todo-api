@@ -3,31 +3,10 @@ const supertest = require('supertest');
 const {ObjectID} = require('mongodb');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
+const {todos, populateTodos, users, populateUsers} = require('./../seed/seed');
 
-/*
-  Before running each test we delete the data in todo collection
-  We also create a mock array of todos so that GET /todos works
-  To handle this we modify the POST /todos unit tests.
-*/
-const todos = [
-  {
-    _id:new ObjectID(),
-    text:'First Todo'
-  },{
-    _id:new ObjectID(),
-    text:'Second Todo',
-    completed:true,
-    completedAt:123
-  }
-];
-
-beforeEach((done)=>{
-  Todo.remove({}).then(()=>{
-    return Todo.insertMany(todos);
-  }).then(()=>{
-    done();
-  });
-});
+beforeEach(populateUsers);
+beforeEach(populateTodos);
 
 describe('POST /todos', ()=>{
   it('should create a new todo', (done)=>{
@@ -182,4 +161,63 @@ describe('PATCH /todos/:id', ()=>{
       //   done();
       // });
   })
+});
+
+describe('GET /users/me', ()=>{
+  it('should return valid user if token exists', (done)=>{
+    supertest(app)
+      .get('/users/me')
+      .set('x-auth', users[0].tokens[0].token)
+      .expect(200)
+      .expect((res)=>{
+        expect(res.body._id).toBe(users[0]._id.toHexString());
+      })
+      .end(done);
+  });
+
+  it('should return a 401 if user does not have a token',(done)=>{
+    supertest(app)
+      .get('/users/me')
+      .expect(401)
+      .end(done);
+  });
+});
+
+describe('POST /users', ()=>{
+
+  it('should create a user', (done)=>{
+    supertest(app)
+      .post('/users')
+      .send({
+        email: 'ankit@yahoo.com',
+        password: 'abc123'
+      })
+      .expect(200)
+      .expect((res)=>{
+        expect(res.body.email).toBe('ankit@yahoo.com');
+      })
+      .end(done);
+  });
+
+  it('should return validation error for invalid request', (done)=>{
+    supertest(app)
+      .post('/users')
+      .send({
+        email:'',
+        password:'abc123'
+      })
+      .expect(400)
+      .end(done);
+  });
+  
+  it('should return error for duplicate email', (done)=>{
+    supertest(app)
+      .post('/users')
+      .send({
+        email:'ankurs@gmail.com',
+        password:'abc123'
+      })
+      .expect(400)
+      .end(done);
+  });
 });
