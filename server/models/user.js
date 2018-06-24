@@ -87,6 +87,26 @@ UserSchema.statics.findByToken = function(token){
   });
 };
 
+UserSchema.statics.findByCredentials = function(email, password){
+  var user = this;
+
+  return user.findOne({email}).then((user)=>{
+    if(!user){
+      return Promise.reject();
+    }
+
+    return new Promise((resolve, reject)=>{
+      bcryptjs.compare(password, user.password, (err,res)=>{
+        if(res){
+          return resolve(user);
+        }else{
+          reject();
+        }
+      });
+    });
+  });
+};
+
 /*
   Create a new instance method for individual user object
   We use function() syntax because we need this keyword
