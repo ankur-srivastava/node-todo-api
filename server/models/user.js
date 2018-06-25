@@ -67,6 +67,18 @@ UserSchema.methods.toJSON = function(){
   return lodash.pick(userObject, ['_id','email']);
 };
 
+UserSchema.methods.removeToken = function(token){
+  var user = this;
+
+  return user.update({
+    $pull:{
+      tokens:{
+        token
+      }
+    }
+  });
+};
+
 /*Using statics to define method at model level or in terms of java at class level*/
 UserSchema.statics.findByToken = function(token){
   //Use the Model here i.e. User
