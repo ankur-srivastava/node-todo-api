@@ -31,6 +31,9 @@ We can set NODE_ENV variable so that test database can be used by test files. Ch
 2. We dont modify start script. We set it to development locally. Heroku sets it to production.
 3. In server.js changes are made. And a config file is used to setup env variables.
 
+The environment variable values reside in a private config.json file. A sample config.json file has been made available.
+When you run this Project make sure you add a config.json file.
+
 ---Auth Token---
 For JWT Token functionality refer to user.js and server.js
 
