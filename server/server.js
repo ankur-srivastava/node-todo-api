@@ -24,9 +24,10 @@ var port = process.env.PORT;
 /*The middleware below let's us send body as a JSON object*/
 app.use(bodyParser.json());
 
-app.post('/todos', (req,res)=>{
+app.post('/todos', authenticate, (req,res)=>{
   var newTodo = new Todo({
-    text:req.body.text
+    text:req.body.text,
+    _creator:req.user._id
   });
   newTodo.save().then((doc)=>{
     res.send(doc);
@@ -35,8 +36,10 @@ app.post('/todos', (req,res)=>{
   });
 });
 
-app.get('/todos', (req,res)=>{
-  Todo.find().then((todos)=>{
+app.get('/todos', authenticate, (req,res)=>{
+  Todo.find({
+    _creator:req.user._id
+  }).then((todos)=>{
     res.send({
       todos
     });
@@ -46,15 +49,16 @@ app.get('/todos', (req,res)=>{
 });
 
 //GET todos/123
-app.get('/todos/:id', (req,res)=>{
+app.get('/todos/:id', authenticate, (req,res)=>{
   //Get the id from URL
   //Use 5b27029f665812035ad30c21 in URL
   var id = req.params.id;
   if(!ObjectID.isValid(id)){
     return res.status(404).send('Invalid Todo ID');
   }
-  Todo.findById({
-    _id:id
+  Todo.findOne({
+    _id:id,
+    _creator:req.user._id
   }).then((todo)=>{
     if(!todo){
       return res.send('No Todo');
@@ -66,15 +70,16 @@ app.get('/todos/:id', (req,res)=>{
 
 });
 
-app.delete('/todos/:id', (req,res)=>{
+app.delete('/todos/:id', authenticate, (req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send('Invalid Todo ID');
   }
 
-  Todo.findByIdAndRemove({
-    _id:id
+  Todo.findOneAndRemove({
+    _id:id,
+    _creator:req.user._id
   }).then((todo)=>{
     if(!todo){
       return res.status(404).send('No todo exists');
@@ -86,7 +91,7 @@ app.delete('/todos/:id', (req,res)=>{
   });
 });
 
-app.patch('/todos/:id', (req,res)=>{
+app.patch('/todos/:id', authenticate, (req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
@@ -102,7 +107,7 @@ app.patch('/todos/:id', (req,res)=>{
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(id, {$set:body}, {new:true}).then((todo)=>{
+  Todo.findOneAndUpdate({_id:id, _creator:req.user._id}, {$set:body}, {new:true}).then((todo)=>{
     if(!todo){
       return res.status(404).send('No todo exists');
     }

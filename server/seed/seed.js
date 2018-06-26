@@ -3,6 +3,10 @@ const {Todo} = require('./../models/todo');
 const {User} = require('./../models/user');
 const jwt = require('jsonwebtoken');
 
+
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
+
 /*
   Before running each test we delete the data in todo collection
   We also create a mock array of todos so that GET /todos works
@@ -11,17 +15,17 @@ const jwt = require('jsonwebtoken');
 const todos = [
   {
     _id:new ObjectID(),
-    text:'First Todo'
+    text:'First Todo',
+    _creator:userOneId
   },{
     _id:new ObjectID(),
     text:'Second Todo',
     completed:true,
-    completedAt:123
+    completedAt:123,
+    _creator:userTwoId
   }
 ];
 
-const userOneId = new ObjectID();
-const userTwoId = new ObjectID();
 const users = [
   {
     _id:userOneId,
@@ -36,7 +40,13 @@ const users = [
   },{
     _id:userTwoId,
     email:'adityas@gmail.com',
-    password:'abc123'
+    password:'abc123',
+    tokens:[
+      {
+        access:'auth',
+        token:jwt.sign({_id:userTwoId, access: 'auth'}, 'somesecret').toString()
+      }
+    ]
   }
 ];
 
